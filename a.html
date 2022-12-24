@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quote</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+  </head>
+  <body>
+
+<button class="button"  onclick="displayResult()">Get Trivia</button><br>
+<p id="result"></p>
+
+    <script>
+
+    function displayResult() {
+        const getData = async () => {
+        const response = await fetch("https://the-trivia-api.com/api/questions?categories=food_and_drink&limit=2")
+        const data = await response.json()
+        
+        console.log(data.length)
+        let str = '<p>' ;
+        for (let i=0; i<data.length; i++) {
+            str += "<p>Question: " + data[i].question + " <br><br>";
+            let correctAnswer = data[i].correctAnswer;  
+            let incorrectAnswers = data[i].incorrectAnswers ;
+    
+            let allRadioOptions = '';
+            for (let a=0; a<incorrectAnswers.length; a++) {
+              allRadioOptions += getAnswerRadio("wrong" + a, incorrectAnswers[a]);
+            }
+            
+            allRadioOptions += getAnswerRadio("correct", correctAnswer);
+               
+           str += allRadioOptions + "</p>" 
+        }
+        document.getElementById("result").innerHTML = str;
+        }
+        getData()
+    }
+    
+    function getAnswerRadio(ansId, ansText){
+        return '<input type="radio" id="' + ansId + '" name="answer_option" value="'
+               + ansId + '"> <label for="' + ansId + '">' + ansText + '</label><br>' 
+    }
+    </script>
+  </body>
+
+
+</html>
